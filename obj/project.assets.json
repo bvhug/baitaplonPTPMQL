@@ -10075,19 +10075,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Admin\\.nuget\\packages\\": {}
+    "C:\\Users\\Asus\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Admin\\Documents\\BTL\\Nhom2\\Nhom2.csproj",
+      "projectUniqueName": "C:\\Users\\Asus\\OneDrive\\Documents\\BTL\\Nhom2\\Nhom2.csproj",
       "projectName": "Nhom2",
-      "projectPath": "C:\\Users\\Admin\\Documents\\BTL\\Nhom2\\Nhom2.csproj",
-      "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Admin\\Documents\\BTL\\Nhom2\\obj\\",
+      "projectPath": "C:\\Users\\Asus\\OneDrive\\Documents\\BTL\\Nhom2\\Nhom2.csproj",
+      "packagesPath": "C:\\Users\\Asus\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Asus\\OneDrive\\Documents\\BTL\\Nhom2\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\Asus\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net7.0"
@@ -10151,7 +10151,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.404\\RuntimeIdentifierGraph.json"
       }
     }
   }
