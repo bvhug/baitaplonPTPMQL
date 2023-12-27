@@ -1,4 +1,4 @@
-@model IEnumerable<Nhom2.Models.XeModel>
+@model IEnumerable<baitaplonPTPMQL.Models.Xe>
 
 @{
     ViewData["Title"] = "Index";
@@ -31,9 +31,9 @@
                 @Html.DisplayFor(modelItem => item.TaiXe.MaTaiXe)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.MaXe">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.MaXe">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.MaXe">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.MaXe">Sửa</a> |
+                <a asp-action="Details" asp-route-id="@item.MaXe">Xem</a> |
+                <a asp-action="Delete" asp-route-id="@item.MaXe">Xóa</a>
             </td>
         </tr>
 }

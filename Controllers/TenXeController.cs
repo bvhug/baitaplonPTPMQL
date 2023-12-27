@@ -5,17 +5,17 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Nhom2.Models.Process;
-using MVC;
-using Nhom2.Models;
+using MvcMovie.Data;
+using baitaplonPTPMQL.Models;
+using baitaplonPTPMQL.Models.Process;
 
-namespace Nhom2.Controllers
+namespace baitaplonPTPMQL.Controllers
 {
     public class TenXeController : Controller
     {
-        private readonly ApplicationDbContext _context;
-       
-        public TenXeController(ApplicationDbContext context)
+        private readonly MvcMovieContext _context;
+
+        public TenXeController(MvcMovieContext context)
         {
             _context = context;
         }
@@ -23,27 +23,27 @@ namespace Nhom2.Controllers
         // GET: TenXe
         public async Task<IActionResult> Index()
         {
-              return _context.TenXeModel != null ? 
-                          View(await _context.TenXeModel.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.TenXeModel'  is null.");
+              return _context.TenXe != null ? 
+                          View(await _context.TenXe.ToListAsync()) :
+                          Problem("Entity set 'MvcMovieContext.TenXe'  is null.");
         }
 
         // GET: TenXe/Details/5
         public async Task<IActionResult> Details(string id)
         {
-            if (id == null || _context.TenXeModel == null)
+            if (id == null || _context.TenXe == null)
             {
                 return NotFound();
             }
 
-            var tenXeModel = await _context.TenXeModel
+            var tenXe = await _context.TenXe
                 .FirstOrDefaultAsync(m => m.XeID == id);
-            if (tenXeModel == null)
+            if (tenXe == null)
             {
                 return NotFound();
             }
 
-            return View(tenXeModel);
+            return View(tenXe);
         }
 
         // GET: TenXe/Create
@@ -57,31 +57,31 @@ namespace Nhom2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("XeID,TenXe_BienSo")] TenXeModel tenXeModel)
+        public async Task<IActionResult> Create([Bind("XeID,TenXe_BienSo")] TenXe tenXe)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(tenXeModel);
+                _context.Add(tenXe);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(tenXeModel);
+            return View(tenXe);
         }
 
         // GET: TenXe/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
-            if (id == null || _context.TenXeModel == null)
+            if (id == null || _context.TenXe == null)
             {
                 return NotFound();
             }
 
-            var tenXeModel = await _context.TenXeModel.FindAsync(id);
-            if (tenXeModel == null)
+            var tenXe = await _context.TenXe.FindAsync(id);
+            if (tenXe == null)
             {
                 return NotFound();
             }
-            return View(tenXeModel);
+            return View(tenXe);
         }
 
         // POST: TenXe/Edit/5
@@ -89,9 +89,9 @@ namespace Nhom2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("XeID,TenXe_BienSo")] TenXeModel tenXeModel)
+        public async Task<IActionResult> Edit(string id, [Bind("XeID,TenXe_BienSo")] TenXe tenXe)
         {
-            if (id != tenXeModel.XeID)
+            if (id != tenXe.XeID)
             {
                 return NotFound();
             }
@@ -100,12 +100,12 @@ namespace Nhom2.Controllers
             {
                 try
                 {
-                    _context.Update(tenXeModel);
+                    _context.Update(tenXe);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TenXeModelExists(tenXeModel.XeID))
+                    if (!TenXeExists(tenXe.XeID))
                     {
                         return NotFound();
                     }
@@ -116,25 +116,25 @@ namespace Nhom2.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(tenXeModel);
+            return View(tenXe);
         }
 
         // GET: TenXe/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
-            if (id == null || _context.TenXeModel == null)
+            if (id == null || _context.TenXe == null)
             {
                 return NotFound();
             }
 
-            var tenXeModel = await _context.TenXeModel
+            var tenXe = await _context.TenXe
                 .FirstOrDefaultAsync(m => m.XeID == id);
-            if (tenXeModel == null)
+            if (tenXe == null)
             {
                 return NotFound();
             }
 
-            return View(tenXeModel);
+            return View(tenXe);
         }
 
         // POST: TenXe/Delete/5
@@ -142,23 +142,23 @@ namespace Nhom2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            if (_context.TenXeModel == null)
+            if (_context.TenXe == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.TenXeModel'  is null.");
+                return Problem("Entity set 'MvcMovieContext.TenXe'  is null.");
             }
-            var tenXeModel = await _context.TenXeModel.FindAsync(id);
-            if (tenXeModel != null)
+            var tenXe = await _context.TenXe.FindAsync(id);
+            if (tenXe != null)
             {
-                _context.TenXeModel.Remove(tenXeModel);
+                _context.TenXe.Remove(tenXe);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool TenXeModelExists(string id)
+        private bool TenXeExists(string id)
         {
-          return (_context.TenXeModel?.Any(e => e.XeID == id)).GetValueOrDefault();
+          return (_context.TenXe?.Any(e => e.XeID == id)).GetValueOrDefault();
         }
          private ExcelProcess _excelProcess = new ExcelProcess();
 
@@ -193,12 +193,12 @@ namespace Nhom2.Controllers
                         for (int i = 0; i < dt.Rows.Count; i++)
                         {
                             //create a new Student object
-                            var TX = new TenXeModel();
+                            var TX = new TenXe();
                             //set values for attribiutes
                             TX.XeID = dt.Rows[i][0].ToString();
                             TX.TenXe_BienSo = dt.Rows[i][1].ToString();
                             //add oject to context
-                            _context.TenXeModel.Add(TX);
+                            _context.TenXe.Add(TX);
                         }
                         //save to database
                         await _context.SaveChangesAsync();
@@ -210,4 +210,5 @@ namespace Nhom2.Controllers
         
     }
  }  
-}
+    }
+

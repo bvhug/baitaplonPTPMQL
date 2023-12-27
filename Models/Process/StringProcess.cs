@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace Nhom2.Models.Process
+namespace baitaplonPTPMQL.Models.Process
 {
     public class StringProcess
     {

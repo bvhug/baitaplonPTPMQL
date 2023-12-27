@@ -1,10 +1,10 @@
-@model IEnumerable<Nhom2.Models.KhachHangModel>
+@model IEnumerable<baitaplonPTPMQL.Models.KhachHang>
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Thông tin khách hàng</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -12,6 +12,9 @@
 <table class="table">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.MaKhachHang)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.TenKhachHang)
             </th>
@@ -36,6 +39,9 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaKhachHang)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.TenKhachHang)
             </td>

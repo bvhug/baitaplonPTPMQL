@@ -5,101 +5,60 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using MVC;
-using Nhom2.Migrations;
-using Nhom2.Models;
-using NuGet.Protocol;
-using Nhom2.Models.Process;
+using MvcMovie.Data;
+using baitaplonPTPMQL.Models;
+using baitaplonPTPMQL.Models.Process;
 
-namespace Nhom2.Controllers
+namespace baitaplonPTPMQL.Controllers
 {
     public class KhachHangController : Controller
     {
-        private readonly ApplicationDbContext _context;
-        private object _excelPro;
-        private ExcelProcess _excelProcess = new ExcelProcess();
+        private readonly MvcMovieContext _context;
+         private StringProcess strPro = new StringProcess();
 
-        public KhachHangController(ApplicationDbContext context)
+        public KhachHangController(MvcMovieContext context)
         {
             _context = context;
         }
+
         // GET: KhachHang
-           public async Task<IActionResult> Upload()
-        {
-            return View();
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult>Upload(IFormFile file)
-        {
-            if (file!=null)
-            {
-                string fileExtension = Path.GetExtension(file.FileName);
-                if (fileExtension != ".xls" && fileExtension != ".xlsx")
-                {
-                    ModelState.AddModelError("", "Please choose excel file to upload!");
-                }
-                else
-                {
-                    //rename file when upload to sever
-                    var fileName = DateTime.Now.ToShortTimeString() + fileExtension;
-                    var filePath = Path.Combine(Directory.GetCurrentDirectory() + "/Uploads/Excels", fileName);
-                    var fileLocation = new FileInfo(filePath).ToString();
-                    using (var stream = new FileStream(filePath, FileMode.Create))
-                    {
-                        //save file to server
-                        await file.CopyToAsync(stream);
-                        //read data from file and write to database
-                        var dt = _excelProcess.ExcelToDataTable(fileLocation);
-                        //dùng vòng lặp for để đọc dữ liệu dạng hd
-                        for (int i = 0; i < dt.Rows.Count; i++)
-                        {
-                            //create a new Student object
-                            var kh = new KhachHangModel();
-                            //set values for attribiutes
-                            kh.MaKhachHang = dt.Rows[i][0].ToString();
-                            kh.TenKhachHang = dt.Rows[i][1].ToString();
-                            //add oject to context
-                            _context.KhachHangModel.Add(kh);
-                        }
-                        //save to database
-                        await _context.SaveChangesAsync();
-                        return RedirectToAction(nameof(Index));
-                    }
-                }
-            }
-            return View();
-        
-    }
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.KhachHangModel.Include(k => k.GioiTinh);
-            return View(await applicationDbContext.ToListAsync());
+            var mvcMovieContext = _context.KhachHang.Include(k => k.GioiTinh);
+            return View(await mvcMovieContext.ToListAsync());
         }
 
         // GET: KhachHang/Details/5
         public async Task<IActionResult> Details(string id)
         {
-            if (id == null || _context.KhachHangModel == null)
+            if (id == null || _context.KhachHang == null)
             {
                 return NotFound();
             }
 
-            var khachHangModel = await _context.KhachHangModel
+            var khachHang = await _context.KhachHang
                 .Include(k => k.GioiTinh)
                 .FirstOrDefaultAsync(m => m.MaKhachHang == id);
-            if (khachHangModel == null)
+            if (khachHang == null)
             {
                 return NotFound();
             }
 
-            return View(khachHangModel);
+            return View(khachHang);
         }
 
         // GET: KhachHang/Create
         public IActionResult Create()
         {
-            ViewData["TenGioiTinh"] = new SelectList(_context.GioiTinhModel, "ID", "TenGioiTinh");
+            ViewData["TenGioiTinh"] = new SelectList(_context.GioiTinh, "ID", "TenGioiTinh");
+            var newnhacungcap = "KH001";
+            var countnhacungcap = _context.KhachHang.Count();
+            if (countnhacungcap > 0)
+            {
+                var MaKH = _context.KhachHang.OrderByDescending(m => m.MaKhachHang).First().MaKhachHang;
+                newnhacungcap = strPro.AutoGenerateCode(MaKH);
+            }
+            ViewBag.newID = newnhacungcap;
             return View();
         }
 
@@ -108,33 +67,33 @@ namespace Nhom2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MaKhachHang,TenKhachHang,Ngaysinh,TenGioiTinh,Diachi,CMND,SoDienThoai")] KhachHangModel khachHangModel)
+        public async Task<IActionResult> Create([Bind("MaKhachHang,TenKhachHang,Ngaysinh,TenGioiTinh,Diachi,CMND,SoDienThoai")] KhachHang khachHang)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(khachHangModel);
+                _context.Add(khachHang);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TenGioiTinh"] = new SelectList(_context.GioiTinhModel, "ID", "ID", khachHangModel.TenGioiTinh);
-            return View(khachHangModel);
+            ViewData["TenGioiTinh"] = new SelectList(_context.GioiTinh, "ID", "TenGioiTinh", khachHang.TenGioiTinh);
+            return View(khachHang);
         }
 
         // GET: KhachHang/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
-            if (id == null || _context.KhachHangModel == null)
+            if (id == null || _context.KhachHang == null)
             {
                 return NotFound();
             }
 
-            var khachHangModel = await _context.KhachHangModel.FindAsync(id);
-            if (khachHangModel == null)
+            var khachHang = await _context.KhachHang.FindAsync(id);
+            if (khachHang == null)
             {
                 return NotFound();
             }
-            ViewData["TenGioiTinh"] = new SelectList(_context.GioiTinhModel, "ID", "ID", khachHangModel.TenGioiTinh);
-            return View(khachHangModel);
+            ViewData["TenGioiTinh"] = new SelectList(_context.GioiTinh, "ID", "TenGioiTinh", khachHang.TenGioiTinh);
+            return View(khachHang);
         }
 
         // POST: KhachHang/Edit/5
@@ -142,9 +101,9 @@ namespace Nhom2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("MaKhachHang,TenKhachHang,Ngaysinh,TenGioiTinh,Diachi,CMND,SoDienThoai")] KhachHangModel khachHangModel)
+        public async Task<IActionResult> Edit(string id, [Bind("MaKhachHang,TenKhachHang,Ngaysinh,TenGioiTinh,Diachi,CMND,SoDienThoai")] KhachHang khachHang)
         {
-            if (id != khachHangModel.MaKhachHang)
+            if (id != khachHang.MaKhachHang)
             {
                 return NotFound();
             }
@@ -153,12 +112,12 @@ namespace Nhom2.Controllers
             {
                 try
                 {
-                    _context.Update(khachHangModel);
+                    _context.Update(khachHang);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!KhachHangModelExists(khachHangModel.MaKhachHang))
+                    if (!KhachHangExists(khachHang.MaKhachHang))
                     {
                         return NotFound();
                     }
@@ -169,27 +128,27 @@ namespace Nhom2.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TenGioiTinh"] = new SelectList(_context.GioiTinhModel, "ID", "ID", khachHangModel.TenGioiTinh);
-            return View(khachHangModel);
+            ViewData["TenGioiTinh"] = new SelectList(_context.GioiTinh, "ID", "ID", khachHang.TenGioiTinh);
+            return View(khachHang);
         }
 
         // GET: KhachHang/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
-            if (id == null || _context.KhachHangModel == null)
+            if (id == null || _context.KhachHang == null)
             {
                 return NotFound();
             }
 
-            var khachHangModel = await _context.KhachHangModel
+            var khachHang = await _context.KhachHang
                 .Include(k => k.GioiTinh)
                 .FirstOrDefaultAsync(m => m.MaKhachHang == id);
-            if (khachHangModel == null)
+            if (khachHang == null)
             {
                 return NotFound();
             }
 
-            return View(khachHangModel);
+            return View(khachHang);
         }
 
         // POST: KhachHang/Delete/5
@@ -197,23 +156,23 @@ namespace Nhom2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            if (_context.KhachHangModel == null)
+            if (_context.KhachHang == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.KhachHangModel'  is null.");
+                return Problem("Entity set 'MvcMovieContext.KhachHang'  is null.");
             }
-            var khachHangModel = await _context.KhachHangModel.FindAsync(id);
-            if (khachHangModel != null)
+            var khachHang = await _context.KhachHang.FindAsync(id);
+            if (khachHang != null)
             {
-                _context.KhachHangModel.Remove(khachHangModel);
+                _context.KhachHang.Remove(khachHang);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool KhachHangModelExists(string id)
+        private bool KhachHangExists(string id)
         {
-          return (_context.KhachHangModel?.Any(e => e.MaKhachHang == id)).GetValueOrDefault();
+          return (_context.KhachHang?.Any(e => e.MaKhachHang == id)).GetValueOrDefault();
         }
     }
 }

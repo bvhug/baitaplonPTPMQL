@@ -5,16 +5,16 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using MVC;
-using Nhom2.Models;
+using MvcMovie.Data;
+using baitaplonPTPMQL.Models;
 
-namespace Nhom2.Controllers
+namespace baitaplonPTPMQL.Controllers
 {
     public class XeController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly MvcMovieContext _context;
 
-        public XeController(ApplicationDbContext context)
+        public XeController(MvcMovieContext context)
         {
             _context = context;
         }
@@ -22,35 +22,35 @@ namespace Nhom2.Controllers
         // GET: Xe
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.XeModel.Include(x => x.TaiXe).Include(x => x.TenXe);
-            return View(await applicationDbContext.ToListAsync());
+            var mvcMovieContext = _context.Xe.Include(x => x.TaiXe).Include(x => x.TenXe);
+            return View(await mvcMovieContext.ToListAsync());
         }
 
         // GET: Xe/Details/5
         public async Task<IActionResult> Details(string id)
         {
-            if (id == null || _context.XeModel == null)
+            if (id == null || _context.Xe == null)
             {
                 return NotFound();
             }
 
-            var xeModel = await _context.XeModel
+            var xe = await _context.Xe
                 .Include(x => x.TaiXe)
                 .Include(x => x.TenXe)
                 .FirstOrDefaultAsync(m => m.MaXe == id);
-            if (xeModel == null)
+            if (xe == null)
             {
                 return NotFound();
             }
 
-            return View(xeModel);
+            return View(xe);
         }
 
         // GET: Xe/Create
         public IActionResult Create()
         {
-            ViewData["MaTaiXe"] = new SelectList(_context.Set<TaiXeModel>(), "MaTaiXe", "MaTaiXe");
-            ViewData["TenCuaXe"] = new SelectList(_context.Set<TenXeModel>(), "XeID", "XeID");
+            ViewData["MaTaiXe"] = new SelectList(_context.TaiXe, "MaTaiXe", "MaTaiXe");
+            ViewData["TenCuaXe"] = new SelectList(_context.TenXe, "XeID", "XeID");
             return View();
         }
 
@@ -59,35 +59,35 @@ namespace Nhom2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MaXe,TenCuaXe,MaTaiXe")] XeModel xeModel)
+        public async Task<IActionResult> Create([Bind("MaXe,TenCuaXe,MaTaiXe")] Xe xe)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(xeModel);
+                _context.Add(xe);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MaTaiXe"] = new SelectList(_context.Set<TaiXeModel>(), "MaTaiXe", "MaTaiXe", xeModel.MaTaiXe);
-            ViewData["TenCuaXe"] = new SelectList(_context.Set<TenXeModel>(), "XeID", "XeID", xeModel.TenCuaXe);
-            return View(xeModel);
+            ViewData["MaTaiXe"] = new SelectList(_context.TaiXe, "MaTaiXe", "MaTaiXe", xe.MaTaiXe);
+            ViewData["TenCuaXe"] = new SelectList(_context.TenXe, "XeID", "XeID", xe.TenCuaXe);
+            return View(xe);
         }
 
         // GET: Xe/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
-            if (id == null || _context.XeModel == null)
+            if (id == null || _context.Xe == null)
             {
                 return NotFound();
             }
 
-            var xeModel = await _context.XeModel.FindAsync(id);
-            if (xeModel == null)
+            var xe = await _context.Xe.FindAsync(id);
+            if (xe == null)
             {
                 return NotFound();
             }
-            ViewData["MaTaiXe"] = new SelectList(_context.Set<TaiXeModel>(), "MaTaiXe", "MaTaiXe", xeModel.MaTaiXe);
-            ViewData["TenCuaXe"] = new SelectList(_context.Set<TenXeModel>(), "XeID", "XeID", xeModel.TenCuaXe);
-            return View(xeModel);
+            ViewData["MaTaiXe"] = new SelectList(_context.TaiXe, "MaTaiXe", "MaTaiXe", xe.MaTaiXe);
+            ViewData["TenCuaXe"] = new SelectList(_context.TenXe, "XeID", "XeID", xe.TenCuaXe);
+            return View(xe);
         }
 
         // POST: Xe/Edit/5
@@ -95,9 +95,9 @@ namespace Nhom2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("MaXe,TenCuaXe,MaTaiXe")] XeModel xeModel)
+        public async Task<IActionResult> Edit(string id, [Bind("MaXe,TenCuaXe,MaTaiXe")] Xe xe)
         {
-            if (id != xeModel.MaXe)
+            if (id != xe.MaXe)
             {
                 return NotFound();
             }
@@ -106,12 +106,12 @@ namespace Nhom2.Controllers
             {
                 try
                 {
-                    _context.Update(xeModel);
+                    _context.Update(xe);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!XeModelExists(xeModel.MaXe))
+                    if (!XeExists(xe.MaXe))
                     {
                         return NotFound();
                     }
@@ -122,29 +122,29 @@ namespace Nhom2.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MaTaiXe"] = new SelectList(_context.Set<TaiXeModel>(), "MaTaiXe", "MaTaiXe", xeModel.MaTaiXe);
-            ViewData["TenCuaXe"] = new SelectList(_context.Set<TenXeModel>(), "XeID", "XeID", xeModel.TenCuaXe);
-            return View(xeModel);
+            ViewData["MaTaiXe"] = new SelectList(_context.TaiXe, "MaTaiXe", "MaTaiXe", xe.MaTaiXe);
+            ViewData["TenCuaXe"] = new SelectList(_context.TenXe, "XeID", "XeID", xe.TenCuaXe);
+            return View(xe);
         }
 
         // GET: Xe/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
-            if (id == null || _context.XeModel == null)
+            if (id == null || _context.Xe == null)
             {
                 return NotFound();
             }
 
-            var xeModel = await _context.XeModel
+            var xe = await _context.Xe
                 .Include(x => x.TaiXe)
                 .Include(x => x.TenXe)
                 .FirstOrDefaultAsync(m => m.MaXe == id);
-            if (xeModel == null)
+            if (xe == null)
             {
                 return NotFound();
             }
 
-            return View(xeModel);
+            return View(xe);
         }
 
         // POST: Xe/Delete/5
@@ -152,23 +152,23 @@ namespace Nhom2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            if (_context.XeModel == null)
+            if (_context.Xe == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.XeModel'  is null.");
+                return Problem("Entity set 'MvcMovieContext.Xe'  is null.");
             }
-            var xeModel = await _context.XeModel.FindAsync(id);
-            if (xeModel != null)
+            var xe = await _context.Xe.FindAsync(id);
+            if (xe != null)
             {
-                _context.XeModel.Remove(xeModel);
+                _context.Xe.Remove(xe);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool XeModelExists(string id)
+        private bool XeExists(string id)
         {
-          return (_context.XeModel?.Any(e => e.MaXe == id)).GetValueOrDefault();
+          return (_context.Xe?.Any(e => e.MaXe == id)).GetValueOrDefault();
         }
     }
 }

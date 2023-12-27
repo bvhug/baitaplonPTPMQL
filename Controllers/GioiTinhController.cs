@@ -5,16 +5,16 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using MVC;
-using Nhom2.Models;
+using MvcMovie.Data;
+using baitaplonPTPMQL.Models;
 
-namespace Nhom2.Controllers
+namespace baitaplonPTPMQL.Controllers
 {
     public class GioiTinhController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly MvcMovieContext _context;
 
-        public GioiTinhController(ApplicationDbContext context)
+        public GioiTinhController(MvcMovieContext context)
         {
             _context = context;
         }
@@ -22,27 +22,27 @@ namespace Nhom2.Controllers
         // GET: GioiTinh
         public async Task<IActionResult> Index()
         {
-              return _context.GioiTinhModel != null ? 
-                          View(await _context.GioiTinhModel.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.GioiTinhModel'  is null.");
+              return _context.GioiTinh != null ? 
+                          View(await _context.GioiTinh.ToListAsync()) :
+                          Problem("Entity set 'MvcMovieContext.GioiTinh'  is null.");
         }
 
         // GET: GioiTinh/Details/5
         public async Task<IActionResult> Details(string id)
         {
-            if (id == null || _context.GioiTinhModel == null)
+            if (id == null || _context.GioiTinh == null)
             {
                 return NotFound();
             }
 
-            var gioiTinhModel = await _context.GioiTinhModel
+            var gioiTinh = await _context.GioiTinh
                 .FirstOrDefaultAsync(m => m.ID == id);
-            if (gioiTinhModel == null)
+            if (gioiTinh == null)
             {
                 return NotFound();
             }
 
-            return View(gioiTinhModel);
+            return View(gioiTinh);
         }
 
         // GET: GioiTinh/Create
@@ -56,31 +56,31 @@ namespace Nhom2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,TenGioiTinh")] GioiTinhModel gioiTinhModel)
+        public async Task<IActionResult> Create([Bind("ID,TenGioiTinh")] GioiTinh gioiTinh)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(gioiTinhModel);
+                _context.Add(gioiTinh);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(gioiTinhModel);
+            return View(gioiTinh);
         }
 
         // GET: GioiTinh/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
-            if (id == null || _context.GioiTinhModel == null)
+            if (id == null || _context.GioiTinh == null)
             {
                 return NotFound();
             }
 
-            var gioiTinhModel = await _context.GioiTinhModel.FindAsync(id);
-            if (gioiTinhModel == null)
+            var gioiTinh = await _context.GioiTinh.FindAsync(id);
+            if (gioiTinh == null)
             {
                 return NotFound();
             }
-            return View(gioiTinhModel);
+            return View(gioiTinh);
         }
 
         // POST: GioiTinh/Edit/5
@@ -88,9 +88,9 @@ namespace Nhom2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("ID,TenGioiTinh")] GioiTinhModel gioiTinhModel)
+        public async Task<IActionResult> Edit(string id, [Bind("ID,TenGioiTinh")] GioiTinh gioiTinh)
         {
-            if (id != gioiTinhModel.ID)
+            if (id != gioiTinh.ID)
             {
                 return NotFound();
             }
@@ -99,12 +99,12 @@ namespace Nhom2.Controllers
             {
                 try
                 {
-                    _context.Update(gioiTinhModel);
+                    _context.Update(gioiTinh);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!GioiTinhModelExists(gioiTinhModel.ID))
+                    if (!GioiTinhExists(gioiTinh.ID))
                     {
                         return NotFound();
                     }
@@ -115,25 +115,25 @@ namespace Nhom2.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(gioiTinhModel);
+            return View(gioiTinh);
         }
 
         // GET: GioiTinh/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
-            if (id == null || _context.GioiTinhModel == null)
+            if (id == null || _context.GioiTinh == null)
             {
                 return NotFound();
             }
 
-            var gioiTinhModel = await _context.GioiTinhModel
+            var gioiTinh = await _context.GioiTinh
                 .FirstOrDefaultAsync(m => m.ID == id);
-            if (gioiTinhModel == null)
+            if (gioiTinh == null)
             {
                 return NotFound();
             }
 
-            return View(gioiTinhModel);
+            return View(gioiTinh);
         }
 
         // POST: GioiTinh/Delete/5
@@ -141,23 +141,23 @@ namespace Nhom2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            if (_context.GioiTinhModel == null)
+            if (_context.GioiTinh == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.GioiTinhModel'  is null.");
+                return Problem("Entity set 'MvcMovieContext.GioiTinh'  is null.");
             }
-            var gioiTinhModel = await _context.GioiTinhModel.FindAsync(id);
-            if (gioiTinhModel != null)
+            var gioiTinh = await _context.GioiTinh.FindAsync(id);
+            if (gioiTinh != null)
             {
-                _context.GioiTinhModel.Remove(gioiTinhModel);
+                _context.GioiTinh.Remove(gioiTinh);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool GioiTinhModelExists(string id)
+        private bool GioiTinhExists(string id)
         {
-          return (_context.GioiTinhModel?.Any(e => e.ID == id)).GetValueOrDefault();
+          return (_context.GioiTinh?.Any(e => e.ID == id)).GetValueOrDefault();
         }
     }
 }

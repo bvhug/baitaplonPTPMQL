@@ -5,18 +5,19 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Nhom2.Models.Process;
-using MVC;
-using Nhom2.Models;
+using MvcMovie.Data;
+using baitaplonPTPMQL.Models;
+using baitaplonPTPMQL.Models.Process;
 
-namespace Nhom2.Controllers
+namespace baitaplonPTPMQL.Controllers
 {
+
     public class NhanVienController : Controller
     {
-        private readonly ApplicationDbContext _context;
-        private StringProcess strPro = new StringProcess();
+        private readonly MvcMovieContext _context;
+         private StringProcess strPro = new StringProcess();
 
-        public NhanVienController(ApplicationDbContext context)
+        public NhanVienController(MvcMovieContext context)
         {
             _context = context;
         }
@@ -24,41 +25,42 @@ namespace Nhom2.Controllers
         // GET: NhanVien
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.NhanVienModel.Include(n => n.GioiTinh);
-            return View(await applicationDbContext.ToListAsync());
+            var mvcMovieContext = _context.NhanVien.Include(n => n.GioiTinh);
+            return View(await mvcMovieContext.ToListAsync());
         }
 
         // GET: NhanVien/Details/5
         public async Task<IActionResult> Details(string id)
         {
-            if (id == null || _context.NhanVienModel == null)
+            if (id == null || _context.NhanVien == null)
             {
                 return NotFound();
             }
 
-            var nhanVienModel = await _context.NhanVienModel
+            var nhanVien = await _context.NhanVien
                 .Include(n => n.GioiTinh)
                 .FirstOrDefaultAsync(m => m.MaNhanVien == id);
-            if (nhanVienModel == null)
+            if (nhanVien == null)
             {
                 return NotFound();
             }
 
-            return View(nhanVienModel);
+            return View(nhanVien);
         }
 
         // GET: NhanVien/Create
         public IActionResult Create()
         {
-            ViewData["TenGioiTinh"] = new SelectList(_context.GioiTinhModel, "ID", "TenGioiTinh");
+            ViewData["TenGioiTinh"] = new SelectList(_context.GioiTinh, "ID", "TenGioiTinh");
             var newnhacungcap = "NV01";
-            var countnhacungcap = _context.NhanVienModel.Count();
+            var countnhacungcap = _context.NhanVien.Count();
             if (countnhacungcap > 0)
             {
-                var Manv = _context.NhanVienModel.OrderByDescending(m => m.MaNhanVien).First().MaNhanVien;
+                var Manv = _context.NhanVien.OrderByDescending(m => m.MaNhanVien).First().MaNhanVien;
                 newnhacungcap = strPro.AutoGenerateCode(Manv);
             }
             ViewBag.newID = newnhacungcap;
+
             return View();
         }
 
@@ -67,33 +69,33 @@ namespace Nhom2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MaNhanVien,TenNhanVien,Ngaysinh,TenGioiTinh,Diachi,CMND,SoDienThoai")] NhanVienModel nhanVienModel)
+        public async Task<IActionResult> Create([Bind("MaNhanVien,TenNhanVien,Ngaysinh,TenGioiTinh,Diachi,CMND,SoDienThoai")] NhanVien nhanVien)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(nhanVienModel);
+                _context.Add(nhanVien);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TenGioiTinh"] = new SelectList(_context.GioiTinhModel, "ID", "ID", nhanVienModel.TenGioiTinh);
-            return View(nhanVienModel);
+            ViewData["TenGioiTinh"] = new SelectList(_context.GioiTinh, "ID", "TenGioiTinh", nhanVien.TenGioiTinh);
+            return View(nhanVien);
         }
 
         // GET: NhanVien/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
-            if (id == null || _context.NhanVienModel == null)
+            if (id == null || _context.NhanVien == null)
             {
                 return NotFound();
             }
 
-            var nhanVienModel = await _context.NhanVienModel.FindAsync(id);
-            if (nhanVienModel == null)
+            var nhanVien = await _context.NhanVien.FindAsync(id);
+            if (nhanVien == null)
             {
                 return NotFound();
             }
-            ViewData["TenGioiTinh"] = new SelectList(_context.GioiTinhModel, "ID", "ID", nhanVienModel.TenGioiTinh);
-            return View(nhanVienModel);
+            ViewData["TenGioiTinh"] = new SelectList(_context.GioiTinh, "ID", "TenGioiTinh", nhanVien.TenGioiTinh);
+            return View(nhanVien);
         }
 
         // POST: NhanVien/Edit/5
@@ -101,9 +103,9 @@ namespace Nhom2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("MaNhanVien,TenNhanVien,Ngaysinh,TenGioiTinh,Diachi,CMND,SoDienThoai")] NhanVienModel nhanVienModel)
+        public async Task<IActionResult> Edit(string id, [Bind("MaNhanVien,TenNhanVien,Ngaysinh,TenGioiTinh,Diachi,CMND,SoDienThoai")] NhanVien nhanVien)
         {
-            if (id != nhanVienModel.MaNhanVien)
+            if (id != nhanVien.MaNhanVien)
             {
                 return NotFound();
             }
@@ -112,12 +114,12 @@ namespace Nhom2.Controllers
             {
                 try
                 {
-                    _context.Update(nhanVienModel);
+                    _context.Update(nhanVien);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!NhanVienModelExists(nhanVienModel.MaNhanVien))
+                    if (!NhanVienExists(nhanVien.MaNhanVien))
                     {
                         return NotFound();
                     }
@@ -128,27 +130,27 @@ namespace Nhom2.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TenGioiTinh"] = new SelectList(_context.GioiTinhModel, "ID", "ID", nhanVienModel.TenGioiTinh);
-            return View(nhanVienModel);
+            ViewData["TenGioiTinh"] = new SelectList(_context.GioiTinh, "ID", "ID", nhanVien.TenGioiTinh);
+            return View(nhanVien);
         }
 
         // GET: NhanVien/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
-            if (id == null || _context.NhanVienModel == null)
+            if (id == null || _context.NhanVien == null)
             {
                 return NotFound();
             }
 
-            var nhanVienModel = await _context.NhanVienModel
+            var nhanVien = await _context.NhanVien
                 .Include(n => n.GioiTinh)
                 .FirstOrDefaultAsync(m => m.MaNhanVien == id);
-            if (nhanVienModel == null)
+            if (nhanVien == null)
             {
                 return NotFound();
             }
 
-            return View(nhanVienModel);
+            return View(nhanVien);
         }
 
         // POST: NhanVien/Delete/5
@@ -156,23 +158,24 @@ namespace Nhom2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            if (_context.NhanVienModel == null)
+            if (_context.NhanVien == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.NhanVienModel'  is null.");
+                return Problem("Entity set 'MvcMovieContext.NhanVien'  is null.");
             }
-            var nhanVienModel = await _context.NhanVienModel.FindAsync(id);
-            if (nhanVienModel != null)
+            var nhanVien = await _context.NhanVien.FindAsync(id);
+            if (nhanVien != null)
             {
-                _context.NhanVienModel.Remove(nhanVienModel);
+                _context.NhanVien.Remove(nhanVien);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool NhanVienModelExists(string id)
+        private bool NhanVienExists(string id)
         {
-          return (_context.NhanVienModel?.Any(e => e.MaNhanVien == id)).GetValueOrDefault();
+          return (_context.NhanVien?.Any(e => e.MaNhanVien == id)).GetValueOrDefault();
         }
     }
 }
+

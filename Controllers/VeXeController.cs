@@ -5,16 +5,18 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using MVC;
-using Nhom2.Models;
+using MvcMovie.Data;
+using baitaplonPTPMQL.Models;
+using baitaplonPTPMQL.Models.Process;
 
-namespace Nhom2.Controllers
+namespace baitaplonPTPMQL.Controllers
 {
     public class VeXeController : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly MvcMovieContext _context;
+         private StringProcess strPro = new StringProcess();
 
-        public VeXeController(ApplicationDbContext context)
+        public VeXeController(MvcMovieContext context)
         {
             _context = context;
         }
@@ -22,37 +24,45 @@ namespace Nhom2.Controllers
         // GET: VeXe
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.VeXeModel.Include(v => v.KhachHang).Include(v => v.NhanVien).Include(v => v.TenXe);
-            return View(await applicationDbContext.ToListAsync());
+            var mvcMovieContext = _context.VeXe.Include(v => v.KhachHang).Include(v => v.NhanVien).Include(v => v.TenXe);
+            return View(await mvcMovieContext.ToListAsync());
         }
 
         // GET: VeXe/Details/5
         public async Task<IActionResult> Details(string id)
         {
-            if (id == null || _context.VeXeModel == null)
+            if (id == null || _context.VeXe == null)
             {
                 return NotFound();
             }
 
-            var veXeModel = await _context.VeXeModel
+            var veXe = await _context.VeXe
                 .Include(v => v.KhachHang)
                 .Include(v => v.NhanVien)
                 .Include(v => v.TenXe)
                 .FirstOrDefaultAsync(m => m.MaVe == id);
-            if (veXeModel == null)
+            if (veXe == null)
             {
                 return NotFound();
             }
 
-            return View(veXeModel);
+            return View(veXe);
         }
 
         // GET: VeXe/Create
         public IActionResult Create()
         {
-            ViewData["MaKhachHang"] = new SelectList(_context.Set<KhachHangModel>(), "MaKhachHang", "MaKhachHang");
-            ViewData["MaNhanVien"] = new SelectList(_context.Set<NhanVienModel>(), "MaNhanVien", "MaNhanVien");
-            ViewData["TenXe_BienSo"] = new SelectList(_context.Set<TenXeModel>(), "XeID", "XeID");
+            ViewData["MaKhachHang"] = new SelectList(_context.KhachHang, "MaKhachHang", "MaKhachHang");
+            ViewData["MaNhanVien"] = new SelectList(_context.NhanVien, "MaNhanVien", "MaNhanVien");
+            ViewData["TenXe_BienSo"] = new SelectList(_context.TenXe, "XeID", "TenXe_BienSo");
+             var newnhacungcap = "VX001";
+            var countnhacungcap = _context.KhachHang.Count();
+            if (countnhacungcap > 0)
+            {
+                var MaVX = _context.VeXe.OrderByDescending(m => m.MaVe).First().MaVe;
+                newnhacungcap = strPro.AutoGenerateCode(MaVX);
+            }
+            ViewBag.newID = newnhacungcap;
             return View();
         }
 
@@ -61,37 +71,37 @@ namespace Nhom2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("MaVe,TenVe,TenXe_BienSo,MaNhanVien,MaKhachHang")] VeXeModel veXeModel)
+        public async Task<IActionResult> Create([Bind("MaVe,TenVe,TenXe_BienSo,MaNhanVien,MaKhachHang")] VeXe veXe)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(veXeModel);
+                _context.Add(veXe);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MaKhachHang"] = new SelectList(_context.Set<KhachHangModel>(), "MaKhachHang", "MaKhachHang", veXeModel.MaKhachHang);
-            ViewData["MaNhanVien"] = new SelectList(_context.Set<NhanVienModel>(), "MaNhanVien", "MaNhanVien", veXeModel.MaNhanVien);
-            ViewData["TenXe_BienSo"] = new SelectList(_context.Set<TenXeModel>(), "XeID", "XeID", veXeModel.TenXe_BienSo);
-            return View(veXeModel);
+            ViewData["MaKhachHang"] = new SelectList(_context.KhachHang, "MaKhachHang", "MaKhachHang", veXe.MaKhachHang);
+            ViewData["MaNhanVien"] = new SelectList(_context.NhanVien, "MaNhanVien", "MaNhanVien", veXe.MaNhanVien);
+            ViewData["TenXe_BienSo"] = new SelectList(_context.TenXe, "XeID", "TenXe_BienSo", veXe.TenXe_BienSo);
+            return View(veXe);
         }
 
         // GET: VeXe/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
-            if (id == null || _context.VeXeModel == null)
+            if (id == null || _context.VeXe == null)
             {
                 return NotFound();
             }
 
-            var veXeModel = await _context.VeXeModel.FindAsync(id);
-            if (veXeModel == null)
+            var veXe = await _context.VeXe.FindAsync(id);
+            if (veXe == null)
             {
                 return NotFound();
             }
-            ViewData["MaKhachHang"] = new SelectList(_context.Set<KhachHangModel>(), "MaKhachHang", "MaKhachHang", veXeModel.MaKhachHang);
-            ViewData["MaNhanVien"] = new SelectList(_context.Set<NhanVienModel>(), "MaNhanVien", "MaNhanVien", veXeModel.MaNhanVien);
-            ViewData["TenXe_BienSo"] = new SelectList(_context.Set<TenXeModel>(), "XeID", "XeID", veXeModel.TenXe_BienSo);
-            return View(veXeModel);
+            ViewData["MaKhachHang"] = new SelectList(_context.KhachHang, "MaKhachHang", "MaKhachHang", veXe.MaKhachHang);
+            ViewData["MaNhanVien"] = new SelectList(_context.NhanVien, "MaNhanVien", "MaNhanVien", veXe.MaNhanVien);
+            ViewData["TenXe_BienSo"] = new SelectList(_context.TenXe, "XeID", "XeID", veXe.TenXe_BienSo);
+            return View(veXe);
         }
 
         // POST: VeXe/Edit/5
@@ -99,9 +109,9 @@ namespace Nhom2.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("MaVe,TenVe,TenXe_BienSo,MaNhanVien,MaKhachHang")] VeXeModel veXeModel)
+        public async Task<IActionResult> Edit(string id, [Bind("MaVe,TenVe,TenXe_BienSo,MaNhanVien,MaKhachHang")] VeXe veXe)
         {
-            if (id != veXeModel.MaVe)
+            if (id != veXe.MaVe)
             {
                 return NotFound();
             }
@@ -110,12 +120,12 @@ namespace Nhom2.Controllers
             {
                 try
                 {
-                    _context.Update(veXeModel);
+                    _context.Update(veXe);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!VeXeModelExists(veXeModel.MaVe))
+                    if (!VeXeExists(veXe.MaVe))
                     {
                         return NotFound();
                     }
@@ -126,31 +136,31 @@ namespace Nhom2.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MaKhachHang"] = new SelectList(_context.Set<KhachHangModel>(), "MaKhachHang", "MaKhachHang", veXeModel.MaKhachHang);
-            ViewData["MaNhanVien"] = new SelectList(_context.Set<NhanVienModel>(), "MaNhanVien", "MaNhanVien", veXeModel.MaNhanVien);
-            ViewData["TenXe_BienSo"] = new SelectList(_context.Set<TenXeModel>(), "XeID", "XeID", veXeModel.TenXe_BienSo);
-            return View(veXeModel);
+            ViewData["MaKhachHang"] = new SelectList(_context.KhachHang, "MaKhachHang", "MaKhachHang", veXe.MaKhachHang);
+            ViewData["MaNhanVien"] = new SelectList(_context.NhanVien, "MaNhanVien", "MaNhanVien", veXe.MaNhanVien);
+            ViewData["TenXe_BienSo"] = new SelectList(_context.TenXe, "XeID", "XeID", veXe.TenXe_BienSo);
+            return View(veXe);
         }
 
         // GET: VeXe/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
-            if (id == null || _context.VeXeModel == null)
+            if (id == null || _context.VeXe == null)
             {
                 return NotFound();
             }
 
-            var veXeModel = await _context.VeXeModel
+            var veXe = await _context.VeXe
                 .Include(v => v.KhachHang)
                 .Include(v => v.NhanVien)
                 .Include(v => v.TenXe)
                 .FirstOrDefaultAsync(m => m.MaVe == id);
-            if (veXeModel == null)
+            if (veXe == null)
             {
                 return NotFound();
             }
 
-            return View(veXeModel);
+            return View(veXe);
         }
 
         // POST: VeXe/Delete/5
@@ -158,23 +168,23 @@ namespace Nhom2.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            if (_context.VeXeModel == null)
+            if (_context.VeXe == null)
             {
-                return Problem("Entity set 'ApplicationDbContext.VeXeModel'  is null.");
+                return Problem("Entity set 'MvcMovieContext.VeXe'  is null.");
             }
-            var veXeModel = await _context.VeXeModel.FindAsync(id);
-            if (veXeModel != null)
+            var veXe = await _context.VeXe.FindAsync(id);
+            if (veXe != null)
             {
-                _context.VeXeModel.Remove(veXeModel);
+                _context.VeXe.Remove(veXe);
             }
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool VeXeModelExists(string id)
+        private bool VeXeExists(string id)
         {
-          return (_context.VeXeModel?.Any(e => e.MaVe == id)).GetValueOrDefault();
+          return (_context.VeXe?.Any(e => e.MaVe == id)).GetValueOrDefault();
         }
     }
 }

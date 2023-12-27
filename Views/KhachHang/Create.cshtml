@@ -1,26 +1,20 @@
-@model Nhom2.Models.KhachHangModel
+@model baitaplonPTPMQL.Models.KhachHang
 
 @{
     ViewData["Title"] = "Create";
 }
 
 <h1>Create</h1>
+
+<h4>KhachHang</h4>
 <hr />
-      <form asp-action="Upload" enctype="multipart/form-data">
-      <div class="row form-control">
-        <label class="col-sm-2">Nhap Du Lieu</label>
-        <input type="file" name="file" class="col-sm-4">
-        <input type="submit" value="Upload" class="btn btn-primary col-sm-1">
-      </div>
-      </form>
-<h4>KhachHangModel</h4>
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="MaKhachHang" class="control-label"></label>
-                <input asp-for="MaKhachHang" class="form-control" />
+                <input asp-for="MaKhachHang" class="form-control" value="@ViewBag.newID" readonly />
                 <span asp-validation-for="MaKhachHang" class="text-danger"></span>
             </div>
             <div class="form-group">

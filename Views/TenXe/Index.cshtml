@@ -1,20 +1,22 @@
-@model IEnumerable<Nhom2.Models.TenXeModel>
+@model IEnumerable<baitaplonPTPMQL.Models.TenXe>
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Thông tin tên xe</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
-    <div>
-        <a asp-action="Upload">Create Excel</a>
-    </div>
+    <a asp-action="Create">Create New</a><br>
+    <a asp-action="Upload">Upload Excel</a>
 </p>
 <table class="table">
     <thead>
         <tr>
+             
+             <th>
+                @Html.DisplayNameFor(model => model.XeID)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.TenXe_BienSo)
             </th>
@@ -25,12 +27,15 @@
 @foreach (var item in Model) {
         <tr>
             <td>
+                @Html.DisplayFor(modelItem => item.XeID)
+            </td>
+             <td>
                 @Html.DisplayFor(modelItem => item.TenXe_BienSo)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.XeID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.XeID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.XeID">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.XeID">Sửa</a> |
+                <a asp-action="Details" asp-route-id="@item.XeID">Xem</a> |
+                <a asp-action="Delete" asp-route-id="@item.XeID">Xóa</a>
             </td>
         </tr>
 }

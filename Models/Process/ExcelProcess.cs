@@ -1,6 +1,6 @@
 using System.Data;
 using OfficeOpenXml;
-namespace Nhom2.Models.Process
+namespace baitaplonPTPMQL.Models.Process
 {
     public class ExcelProcess
     {

@@ -1,8 +1,8 @@
 ﻿using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Nhom2.Models;
+using baitaplonPTPMQL.Models;
 
-namespace Nhom2.Controllers;
+namespace baitaplonPTPMQL.Controllers;
 
 public class HomeController : Controller
 {

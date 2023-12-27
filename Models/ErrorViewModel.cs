@@ -1,4 +1,4 @@
-namespace Nhom2.Models;
+namespace baitaplonPTPMQL.Models;
 
 public class ErrorViewModel
 {
