@@ -5,7 +5,14 @@
 }
 
 <h1>Create</h1>
-
+<hr />
+      <form asp-action="Upload" enctype="multipart/form-data">
+      <div class="row form-control">
+        <label class="col-sm-2">Nhap Du Lieu</label>
+        <input type="file" name="file" class="col-sm-4">
+        <input type="submit" value="Upload" class="btn btn-primary col-sm-1">
+      </div>
+      </form>
 <h4>KhachHangModel</h4>
 <div class="row">
     <div class="col-md-4">
