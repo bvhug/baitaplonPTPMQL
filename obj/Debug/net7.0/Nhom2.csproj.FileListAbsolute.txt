@@ -228,7 +228,6 @@ C:\Users\Admin\Documents\BTL\Nhom2\bin\Debug\net7.0\ru\Microsoft.CodeAnalysis.Wo
 C:\Users\Admin\Documents\BTL\Nhom2\bin\Debug\net7.0\tr\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
 C:\Users\Admin\Documents\BTL\Nhom2\bin\Debug\net7.0\zh-Hans\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
 C:\Users\Admin\Documents\BTL\Nhom2\bin\Debug\net7.0\zh-Hant\Microsoft.CodeAnalysis.Workspaces.MSBuild.resources.dll
-C:\Users\Admin\Documents\BTL\Nhom2\bin\Debug\net7.0\runtimes\win\lib\net6.0\Microsoft.Win32.SystemEvents.dll
 C:\Users\Admin\Documents\BTL\Nhom2\bin\Debug\net7.0\runtimes\alpine-arm\native\libe_sqlite3.so
 C:\Users\Admin\Documents\BTL\Nhom2\bin\Debug\net7.0\runtimes\alpine-arm64\native\libe_sqlite3.so
 C:\Users\Admin\Documents\BTL\Nhom2\bin\Debug\net7.0\runtimes\alpine-x64\native\libe_sqlite3.so
@@ -251,8 +250,6 @@ C:\Users\Admin\Documents\BTL\Nhom2\bin\Debug\net7.0\runtimes\win-arm\native\e_sq
 C:\Users\Admin\Documents\BTL\Nhom2\bin\Debug\net7.0\runtimes\win-arm64\native\e_sqlite3.dll
 C:\Users\Admin\Documents\BTL\Nhom2\bin\Debug\net7.0\runtimes\win-x64\native\e_sqlite3.dll
 C:\Users\Admin\Documents\BTL\Nhom2\bin\Debug\net7.0\runtimes\win-x86\native\e_sqlite3.dll
-C:\Users\Admin\Documents\BTL\Nhom2\bin\Debug\net7.0\runtimes\unix\lib\net6.0\System.Drawing.Common.dll
-C:\Users\Admin\Documents\BTL\Nhom2\bin\Debug\net7.0\runtimes\win\lib\net6.0\System.Drawing.Common.dll
 C:\Users\Admin\Documents\BTL\Nhom2\bin\Debug\net7.0\runtimes\win\lib\net6.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\Admin\Documents\BTL\Nhom2\bin\Debug\net7.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
 C:\Users\Admin\Documents\BTL\Nhom2\obj\Debug\net7.0\Nhom2.csproj.AssemblyReference.cache
@@ -279,3 +276,15 @@ C:\Users\Admin\Documents\BTL\Nhom2\obj\Debug\net7.0\refint\Nhom2.dll
 C:\Users\Admin\Documents\BTL\Nhom2\obj\Debug\net7.0\Nhom2.pdb
 C:\Users\Admin\Documents\BTL\Nhom2\obj\Debug\net7.0\Nhom2.genruntimeconfig.cache
 C:\Users\Admin\Documents\BTL\Nhom2\obj\Debug\net7.0\ref\Nhom2.dll
+C:\Users\Admin\Documents\BTL\Nhom2\bin\Debug\net7.0\EPPlus.dll
+C:\Users\Admin\Documents\BTL\Nhom2\bin\Debug\net7.0\EPPlus.Interfaces.dll
+C:\Users\Admin\Documents\BTL\Nhom2\bin\Debug\net7.0\EPPlus.System.Drawing.dll
+C:\Users\Admin\Documents\BTL\Nhom2\bin\Debug\net7.0\JetBrains.Annotations.dll
+C:\Users\Admin\Documents\BTL\Nhom2\bin\Debug\net7.0\Microsoft.IO.RecyclableMemoryStream.dll
+C:\Users\Admin\Documents\BTL\Nhom2\bin\Debug\net7.0\System.Security.Cryptography.Pkcs.dll
+C:\Users\Admin\Documents\BTL\Nhom2\bin\Debug\net7.0\X.PagedList.dll
+C:\Users\Admin\Documents\BTL\Nhom2\bin\Debug\net7.0\X.PagedList.Mvc.Core.dll
+C:\Users\Admin\Documents\BTL\Nhom2\bin\Debug\net7.0\runtimes\win\lib\net7.0\Microsoft.Win32.SystemEvents.dll
+C:\Users\Admin\Documents\BTL\Nhom2\bin\Debug\net7.0\runtimes\win\lib\net7.0\System.Drawing.Common.dll
+C:\Users\Admin\Documents\BTL\Nhom2\bin\Debug\net7.0\runtimes\win\lib\net7.0\System.Security.Cryptography.Pkcs.dll
+C:\Users\Admin\Documents\BTL\Nhom2\obj\Debug\net7.0\Nhom2.MvcApplicationPartsAssemblyInfo.cs

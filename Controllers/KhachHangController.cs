@@ -6,19 +6,72 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MVC;
+using Nhom2.Migrations;
 using Nhom2.Models;
+using NuGet.Protocol;
+using Nhom2.Models.Process;
 
 namespace Nhom2.Controllers
 {
     public class KhachHangController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private object _excelPro;
+        private ExcelProcess _excelProcess = new ExcelProcess();
 
         public KhachHangController(ApplicationDbContext context)
         {
             _context = context;
         }
-
+        public async Task<IActionResult> Upload()
+        {
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Upload(IFormFile file)
+        {
+            if (file!=null)
+                {
+                    string fileExtension = Path.GetExtension(file.FileName);
+                    if (fileExtension != ".xls" && fileExtension != ".xlsx")
+                    {
+                        ModelState.AddModelError("", "Please choose excel file to upload!");
+                    }
+                else
+                {
+                        var fileName = DateTime.Now.ToShortTimeString() + fileExtension;
+                        var filePath = Path.Combine(Directory.GetCurrentDirectory() + "/Uploads/Excels", "File" + DateTime.Now.Day + DateTime.Now.Hour + DateTime.Now.Minute + DateTime.Now.Millisecond + fileExtension);
+                        var fileLocation = new FileInfo(filePath).ToString();
+                        if (file.Length > 0)
+                        {
+                             using (var stream = new FileStream(filePath, FileMode.Create))
+                            {
+                                //save file to server
+                                await file.CopyToAsync(stream);
+                                //read data from file and write to database
+                               var dt = _excelProcess.ExcelToDataTable(fileLocation);
+                                for(int i = 0; i < dt.Rows.Count; i++)
+                                {
+                                    //create new KhachHang obj
+                                    var ps = new KhachHang();
+                                    //set value to attributes 
+                                    ps.MaKhachHang = dt.Rows[i][0].ToString();
+                                    ps.TenKhachHang = dt.Rows[i][1].ToString();
+                                    ps.Ngaysinh = dt.Rows[i][2].ToString();
+                                    ps.GioiTinh = dt.Rows[i][3].ToString();
+                                    ps.Diachi = dt.Rows[i][4].ToString();
+                                    ps.CMND = dt.Rows[i][5].ToString();
+                                    
+                                }
+                                await _context.SaveChangesAsync();
+                                return RedirectToAction(nameof(Index));
+                            }
+                        }
+                }
+            }
+            return View();
+        }
         // GET: KhachHang
         public async Task<IActionResult> Index()
         {
