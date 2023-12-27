@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Nhom2.Models.Process;
 using MVC;
 using Nhom2.Models;
 
@@ -13,6 +14,7 @@ namespace Nhom2.Controllers
     public class NhanVienController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private StringProcess strPro = new StringProcess();
 
         public NhanVienController(ApplicationDbContext context)
         {
@@ -48,7 +50,15 @@ namespace Nhom2.Controllers
         // GET: NhanVien/Create
         public IActionResult Create()
         {
-            ViewData["TenGioiTinh"] = new SelectList(_context.GioiTinhModel, "ID", "ID");
+            ViewData["TenGioiTinh"] = new SelectList(_context.GioiTinhModel, "ID", "TenGioiTinh");
+            var newnhacungcap = "NV01";
+            var countnhacungcap = _context.NhanVienModel.Count();
+            if (countnhacungcap > 0)
+            {
+                var Manv = _context.NhanVienModel.OrderByDescending(m => m.MaNhanVien).First().MaNhanVien;
+                newnhacungcap = strPro.AutoGenerateCode(Manv);
+            }
+            ViewBag.newID = newnhacungcap;
             return View();
         }
 

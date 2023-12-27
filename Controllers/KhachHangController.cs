@@ -6,19 +6,23 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MVC;
+using Nhom2.Migrations;
 using Nhom2.Models;
+using NuGet.Protocol;
+using Nhom2.Models.Process;
 
 namespace Nhom2.Controllers
 {
     public class KhachHangController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private object _excelPro;
+        private ExcelProcess _excelProcess = new ExcelProcess();
 
         public KhachHangController(ApplicationDbContext context)
         {
             _context = context;
         }
-
         // GET: KhachHang
         public async Task<IActionResult> Index()
         {
@@ -48,7 +52,7 @@ namespace Nhom2.Controllers
         // GET: KhachHang/Create
         public IActionResult Create()
         {
-            ViewData["TenGioiTinh"] = new SelectList(_context.GioiTinhModel, "ID", "ID");
+            ViewData["TenGioiTinh"] = new SelectList(_context.GioiTinhModel, "ID", "TenGioiTinh");
             return View();
         }
 
