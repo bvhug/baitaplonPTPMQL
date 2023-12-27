@@ -48,7 +48,7 @@ namespace Nhom2.Controllers
         // GET: TaiXe/Create
         public IActionResult Create()
         {
-            ViewData["TenGioiTinh"] = new SelectList(_context.GioiTinhModel, "ID", "ID");
+            ViewData["TenGioiTinh"] = new SelectList(_context.GioiTinhModel, "ID", "TenGioiTinh");
             return View();
         }
 
